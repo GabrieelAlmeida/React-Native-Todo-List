@@ -1,6 +1,6 @@
 # React-Native-Todo-List
 
-!<img width="543" alt="image" src="https://github.com/GabrieelAlmeida/React-Native-Todo-List-/assets/41603912/67506d1c-ff0f-4ada-b98d-0659edd5a758">
+<img width="543" alt="image" src="https://github.com/GabrieelAlmeida/React-Native-Todo-List-/assets/41603912/67506d1c-ff0f-4ada-b98d-0659edd5a758">
 
 
 Aplicação de controle de tarefas no estilo **to-do list**, que contém as seguintes funcionalidades:
