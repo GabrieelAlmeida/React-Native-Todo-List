@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { TaskType } from '../../shared/Task';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { styles } from './styles';
@@ -8,7 +8,7 @@ import { Trash } from 'phosphor-react-native';
 type Props = {
     task: TaskType,
     onRemove?: () => void,
-    onChecked: (value?: boolean, item?: any) => void
+    onChecked: () => void
 }
 
 export function Task({ task, onRemove, onChecked }: Props) {
@@ -25,7 +25,7 @@ export function Task({ task, onRemove, onChecked }: Props) {
                 text={ task.text }
                 innerIconStyle={{ borderWidth: 1 }}
                 isChecked={ checked }
-                onPress={(value) => { setChecked(value), onChecked(value), task.concluded = value}}
+                onPress={(value) => { setChecked(value), onChecked()}}
             />
 
             <TouchableOpacity onPress={onRemove}>

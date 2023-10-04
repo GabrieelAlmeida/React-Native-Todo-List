@@ -1,4 +1,4 @@
-import { FlatList, Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
 import logo from '../../../assets/logo.png';
 import { styles } from "./styles";
 import { useState } from "react";
@@ -10,24 +10,39 @@ import { PlusCircle } from "phosphor-react-native";
 
 export function Home() {
     const [onfocus, setOnFocus] = useState(false);
-    const [tasks, setTasks] = useState([{ text: 'Tarefa 01', concluded: false }, { text: 'Tarefa 02', concluded: true }]);
+    const [tasks, setTasks] = useState<TaskType[]>([]);
     const [taskText, setTaskText] = useState('');
-    const [createdTasks, setCreatedTasks] = useState(0);
 
     function handleTaskAdd() {
         if(tasks.filter(element => element.text === taskText).length === 0 && taskText !== ''){
-            const newTask: TaskType = {text: taskText, concluded: false};
+            const newTask: TaskType = {text: taskText.trim(), concluded: false};
             setTasks(prevState => [...prevState, newTask]);
             setTaskText('');
         }
     }
 
     function handleTaskRemove(item: TaskType) {
-        setTasks(prevState => prevState.filter(task => task.text !== item.text));
+        Alert.alert("Excluir Tarefa", "Desejar excluir essa tarefa?", [
+            {
+                text: "Sim",
+                style: "default",
+                onPress: () => setTasks(prevState => prevState.filter(task => task.text !== item.text))
+            },
+
+            {
+                text: "Não",
+                style: "cancel"
+            }
+        ]);
     }
 
-    function handleTaskCheck(item: any, value: TaskType) {
-        setCreatedTasks(tasks.filter(item => item?.concluded === false).length);   
+    function handleTaskCheck(item: TaskType) {
+        setTasks((prevState) =>
+			prevState.map((task) => {
+				task.text === item.text ? (task.concluded = !task.concluded) : null
+				return task
+			}),
+		)
     }
 
     return (
@@ -42,14 +57,14 @@ export function Home() {
                     <TextInput
                         style={ onfocus ? styles.inputOnFocus : styles.input }
                         placeholder="Adicione uma nova tarefa"
-                        onFocus={() => (setOnFocus(true), console.log('focus'))}
-                        onBlur={() => (setOnFocus(false), console.log('no focus'))}
+                        onFocus={() => setOnFocus(true)}
+                        onBlur={() => setOnFocus(false)}
                         cursorColor="#F2F2F2"
                         onChangeText={setTaskText}
                         value={taskText}   
                     />
 
-                    <TouchableOpacity style={ styles.button} onPress={handleTaskAdd}>
+                    <TouchableOpacity style={styles.button} onPress={handleTaskAdd}>
                         <PlusCircle size={16} />
                     </TouchableOpacity>
                 </View>
@@ -57,12 +72,12 @@ export function Home() {
                 <View style={styles.status}>
                     <View style={styles.countContainer}>
                         <Text style={{color: '#4EA8DE', fontWeight: 'bold'}}>Criadas</Text> 
-                        <Text style={styles.count}>{ tasks.filter(item => item?.concluded !== true ).length }</Text>
+                        <Text style={styles.count}>{ tasks.length }</Text>
                     </View>
 
                     <View style={styles.countContainer}>
                         <Text style={{color: '#8284FA', fontWeight: 'bold'}}>Concluídas</Text>
-                        <Text style={styles.count}>{ tasks.filter(item => item?.concluded !== false).length }</Text>
+                        <Text style={styles.count}>{ tasks.filter(item => item?.concluded === true).length }</Text>
                     </View>
                 </View>
 
@@ -74,7 +89,7 @@ export function Home() {
                         <Task 
                             task={item} 
                             onRemove={()=> handleTaskRemove(item)} 
-                            onChecked={(value) => handleTaskCheck(value, item)}></Task>
+                            onChecked={() => handleTaskCheck(item)}></Task>
                     )}
                     showsVerticalScrollIndicator={false}
                     ListEmptyComponent={
