@@ -7,6 +7,7 @@ import { Task } from "../../components/Task";
 import { Empty } from "../../components/Empty";
 import { PlusCircle } from "phosphor-react-native";
 
+
 export function Home() {
     const [onfocus, setOnFocus] = useState(false);
     const [tasks, setTasks] = useState([{ text: 'Tarefa 01', concluded: false }, { text: 'Tarefa 02', concluded: true }]);
